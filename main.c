@@ -576,16 +576,16 @@ int main(int argc, char *argv[])
 	}
 
     /* game tree is defined, give headline information  */
-    infotree();
+    infotree(); // INFO
 
     if (bleavesonly)
         leavesfrominput();
     else
         {
         if (bnf)
-	    infonf();
+	    infonf(); // INFO
         if (bsf)
-	    infosf();
+	    infosf(); // INFO
     
         /* process games                    */
         if (multiplegames == 0)
@@ -601,6 +601,9 @@ int main(int argc, char *argv[])
 	        {
 	        int priorcount ;
                 /* multiple priors 	*/
+			bgame = 1; // DEBUGX
+			boutprior = 1; // DEBUGX;
+			multipriors = 10; // DEBUGX
 		if (bgambit)
 		    gambopenfile(gintfname);
 	        for (priorcount = 0; priorcount < multipriors; priorcount++)

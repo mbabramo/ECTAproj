@@ -790,8 +790,8 @@ void runlemke(Flagsrunlemke flags)
 	}
     
     /* z0 enters the basis to obtain lex-feasible solution      */
-    enter = Z(0);                                                   
-    leave = flags.binteract ? interactivevar(enter, &z0leave) :
+    enter = Z(0);
+	leave = flags.binteract ? interactivevar(enter, &z0leave) :
 	    lexminvar(enter, &z0leave) ;
     
     /* now give the entering q-col its correct sign             */

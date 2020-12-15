@@ -53,8 +53,27 @@ void genprior(Flagsprior flags)
         for (h = firstiset[pl]; h < firstiset [pl+1]; h++)
 	    if ( h->nmoves > 2)
 	    	{
-		fprintf(stderr, "Sorry, only binary info sets so far.\n") ; 
-		exit(1) ;
+			// We must create fractions that add up to 1 (each greater than 0).
+			// So, we'll just take random numbers from 1 to 10, use those for numerators
+			// and the sum for a denominator.
+			int denominator = 0;
+			for (int i = 0; i < h->nmoves; i++)
+			{
+				double maxValue = 9;
+				int numerator = 1 + floor(maxValue * rand() / (double)RAND_MAX); 
+				((h->move0) + i)->behavprob = ratfromi(numerator); // store value so that we remember it
+				denominator += numerator;
+			}
+			for (int i = 0; i < h->nmoves; i++)
+			{
+				Rat a;
+				a.num = ((h->move0) + i)->behavprob.num;
+				a.den = denominator;
+				((h->move0) + i)->behavprob = a;
+			}
+		//Original code:
+		//fprintf(stderr, "Sorry, only binary info sets so far.\n") ; 
+		//exit(1) ;
 		}
             else 
                 {

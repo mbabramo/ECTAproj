@@ -95,7 +95,6 @@ void sflcp(void)
     /* F        */
     intratmatcpy(sfconstr[2], 0, 0, nisets[2]+1, nseqs[2], 
 	lcpM, nseqs[1], nseqs[1] + nisets[2]+1 );
-
     /* -B\T     */
     payratmatcpy(sfpay, 1, 1, 1, nseqs[1], nseqs[2], 
 	lcpM, nseqs[1] + nisets[2]+1, 0);
@@ -207,6 +206,30 @@ void outbehavstrat(int pl, Rat *rplan, Bool bnewline)
                     }
                 }
             }
+    if (bnewline)
+        printf("\n");
+}
+
+void outbehavstrat_moves(int pl, Rat* rplan, Bool bnewline)
+{
+    char s[MAXSTRL];
+    int i;
+    Move c;
+    Iset h;
+    Rat rprob, bprob;
+
+    for (h = firstiset[pl]; h < firstiset[pl + 1]; h++)
+        for (c = h->move0, i = 0; i < h->nmoves; c++, i++)
+        {
+            rprob = rplan[c - firstmove[pl]];
+            printf("%d", rprob.num);
+            printf("/");
+            printf("%d", rprob.den);
+            if (h != firstiset[pl + 1] - 1 || i != h->nmoves - 1)
+            {
+                printf(",");
+            }
+        }
     if (bnewline)
         printf("\n");
 }

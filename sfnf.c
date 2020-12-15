@@ -166,20 +166,19 @@ void showeq(int whichform, Bool bshortequil, int docuseed)
         {
         case SFORM:
             offset = nseqs[1] + 1 + nisets[2] ;
-            /*  non-sparse printing 
+            /*  non-sparse printing
             printf("Equilibrium realization plan player 1:\n");
             outrealplan(1, solz);
             printf("Equilibrium realization plan player 2:\n");
-            outrealplan(2, solz + offset);
-            */
+            outrealplan(2, solz + offset); */
             if (bshortequil)
                 printf("BEQ>%4d<1>", docuseed);
             else
                 printf("......Equilibrium behavior strategies player 1, 2:\n");
-            outbehavstrat(1, solz, !bshortequil);
+            outbehavstrat_moves(1, solz, !bshortequil); /* remove _moves for original code */
             if (bshortequil)
                 printf(" <2>");
-            outbehavstrat(2, solz + offset, 1);
+            outbehavstrat_moves(2, solz + offset, 1);  /* remove _moves for original code */
             break;
         case NFORM:
             offset = nstrats[1] + 1;
