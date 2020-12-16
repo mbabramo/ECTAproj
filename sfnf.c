@@ -75,7 +75,7 @@ void intratmatcpy(int ** frommatr, Bool bnegate,
                 = ratfromi(bnegate ? -frommatr[i][j] : frommatr[i][j]);
 }
 
-void covvector(int whichform)
+void covvector()
 {
     int i, j, dim1, dim2, offset;
 
@@ -103,7 +103,7 @@ void covvector(int whichform)
 }
 
 
-void showeq(int whichform, Bool bshortequil, int docuseed)
+void showeq(Bool bshortequil, int docuseed)
 {
     int offset;
 

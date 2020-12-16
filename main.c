@@ -60,7 +60,6 @@
 #define FILENAMELENGTH 50
 #define CLOCKUNITSPERSECOND 1000.0
 #define SCLOCKUNITS "millisecs"
-#define WHICHFORMS 2      /* currently only SF (0), NF (1)      */
 #define REPEATHEADER 20   /* repeat header if more games than this */
 
 /* global variables for generating and documenting computation  */
@@ -71,25 +70,17 @@ static  Bool bcomment = 0;      /* complementary pivoting steps */
 static  Bool bequil = 1;        /* output equilibrium           */
 static  Bool bshortequil = 0;   /* output equilibrium shortly   */
 static  Bool binterface = 0;  	/* interface with enumeration	*/
-static  Bool bgambit = 0;  	/* interface with gambit	*/
 /* GAMBIT interface file, option parameter	*/
 static  char gintfname[FILENAMELENGTH] = "dummyname" ;
 static  Flagsrunlemke flemke;
 
-static  int timeused [WHICHFORMS], sumtimeused [WHICHFORMS];
-static  int pivots   [WHICHFORMS], sumpivots   [WHICHFORMS];
-static  int lcpsize  [WHICHFORMS];
-static  int mpdigits [WHICHFORMS], summpdigits [WHICHFORMS];
-static  int eqsize [PLAYERS] [WHICHFORMS], sumeqsize [PLAYERS] [WHICHFORMS];
+static  int timeused , sumtimeused ;
+static  int pivots   , sumpivots   ;
+static  int lcpsize  ;
+static  int mpdigits , summpdigits ;
+static  int eqsize [PLAYERS] , sumeqsize [PLAYERS] ;
 static  Bool agreenfsf [PLAYERS] ;
 
-/* initialize   sumarray[WHICHFORMS]  to zero   */
-void settozero(int *sumarray)
-{
-    int i;
-    for (i = 0; i < WHICHFORMS; i++)
-	sumarray[i] = 0;
-}
 
 /* returns processor SCLOCKUNITS since the last call to
  * stopwatch() and prints them to stdout if  bprint==1
@@ -123,13 +114,13 @@ void infotree()
 	}
 }
 
-/* informs about sequence form, set  lcpsize[SFORM]    */
+/* informs about sequence form, set  lcpsize    */
 void infosf()
 {
     int pl;
     
-    lcpsize [SFORM] = nseqs[1] + nisets[2]+1 + nseqs[2] + nisets[1]+1 ;
-    printf("Sequence form LCP dimension is %d\n", lcpsize [SFORM] );
+    lcpsize = nseqs[1] + nisets[2]+1 + nseqs[2] + nisets[1]+1 ;
+    printf("Sequence form LCP dimension is %d\n", lcpsize );
     for (pl = 1; pl < PLAYERS; pl++)
 	{
 	printf("    Player %d has ", pl);
@@ -154,15 +145,15 @@ void inforesult (int priorseed, int seed)
 {
     char formatstring[] = "%4d %3.0f %6.2f  %3d %3d %3d" ;
     printf("%4d/%4d| ", priorseed, seed);
-	printf(formatstring, pivots [SFORM], 
-            (double) pivots [SFORM]*100.0 / (double) lcpsize [SFORM],
-	    (double) timeused [SFORM] / CLOCKUNITSPERSECOND,
-	    mpdigits [SFORM], eqsize [1] [SFORM], eqsize [2] [SFORM]);
+	printf(formatstring, pivots, 
+            (double) pivots*100.0 / (double) lcpsize ,
+	    (double) timeused  / CLOCKUNITSPERSECOND,
+	    mpdigits , eqsize [1] , eqsize [2] );
     printf("\n");
 }
 
 /* summary info about results for  m  games     */
-void infosumresult (Bool bsf, Bool bnf, int m)
+void infosumresult ( int m)
 {
     double mm = (double) m;
     char formatstring[] = "%6.1f %3.0f %6.2f %4.1f %3.1f %3.1f" ;
@@ -171,13 +162,13 @@ void infosumresult (Bool bsf, Bool bnf, int m)
     if (m > REPEATHEADER)
         inforesultheader ();
     printf("         ");
-	printf(formatstring, (double) sumpivots [SFORM]/ mm, 
-            (double) sumpivots [SFORM]*100.0 /
-                (double) (lcpsize [SFORM] * mm),
-	    (double) sumtimeused [SFORM] / (CLOCKUNITSPERSECOND * mm),
-	    (double) summpdigits [SFORM] / mm, 
-            (double) sumeqsize [1] [SFORM] / mm, 
-            (double) sumeqsize [2] [SFORM] / mm);
+	printf(formatstring, (double) sumpivots / mm, 
+            (double) sumpivots *100.0 /
+                (double) (lcpsize  * mm),
+	    (double) sumtimeused  / (CLOCKUNITSPERSECOND * mm),
+	    (double) summpdigits  / mm, 
+            (double) sumeqsize [1]  / mm, 
+            (double) sumeqsize [2]  / mm);
     printf("\n");
 }
 
@@ -187,7 +178,7 @@ void infosumresult (Bool bsf, Bool bnf, int m)
  * docuseed:  what seed to output for short equilibrium output
  * realplan[][]  must be allocated
  */
-void processgame (int whichform, Bool bnf, int docuseed)
+void processgame (int docuseed)
 {
     int equilsize;
     int offset;
@@ -197,17 +188,17 @@ void processgame (int whichform, Bool bnf, int docuseed)
 		printf("Generating and solving sequence form.\n");
 	sflcp();
 
-    covvector(whichform);
+    covvector();
     if (boutlcp)
 	outlcp();
     stopwatch(0);
     record_digits = 0;
     runlemke(flemke);
-    sumtimeused [whichform] += timeused [whichform] =
+    sumtimeused += timeused =
 	stopwatch(0);
-    sumpivots [whichform] += pivots [whichform] =
+    sumpivots  += pivots  =
 	pivotcount;
-    summpdigits [whichform] += mpdigits [whichform] =
+    summpdigits  += mpdigits  =
 	DIG2DEC(record_digits);
     /* equilibrium size     */
     offset = 0;
@@ -217,11 +208,11 @@ void processgame (int whichform, Bool bnf, int docuseed)
 		/* the next is  offset  for player 2 */
 		offset = nseqs[1] + 1 + nisets[2];
 	
-	sumeqsize [pl] [whichform] +=
-	    eqsize [pl] [whichform] = equilsize ;
+	sumeqsize [pl]  +=
+	    eqsize [pl]  = equilsize ;
 	}
     if (bequil)
-	showeq (whichform, bshortequil, docuseed); 
+	showeq (bshortequil, docuseed); 
 }
 
 
@@ -233,18 +224,10 @@ int main(int argc, char *argv[])
 			 * MINLEVEL..MAXLEVEL:  bintree
 			 */
   
-    int multiplegames  = 0;      /* parameter for    -m option  */
     int multipriors = 0;         /* parameter for    -M option  */
     int seed  = 0;      /* payoff seed for bintree  (-s option) */
-    int newpayoffs = 0; /* number of payoffs to be replaced (-p)*/
-    int *newp1, *newp2; /* arrays for entering new payoffs      */
-
-    /* whichform currently not used (later for RSF)             */
-    int whichform = 0;  /* 0: SF, 1: NF, 2: RSF                 */
 
     Bool bheadfirst = 0;/* headers first (multiple games)       */
-    Bool bsf = 1;       /* Y/N process SF, default              */
-    Bool bnf = 0;       /* Y/N process NF           (-n option) */
     Bool bgame = 0;     /* output the raw game tree (-g option) */
     int c ;
 
@@ -259,128 +242,7 @@ int main(int argc, char *argv[])
     fprior.accuracy   = DEFAULTACCURACY ;
 
     /* parse options    */
-    while ( (c = getopt (argc, argv, "A:bcdeEgG:il:m:M:noOprs:S:t")) != -1)
-	switch (c)
-	    {
-	    int x; 
-	    case 'A':
-		x = atoi(optarg);
-		if (x <= MAXACCURACY &&  x > 0 )
-		    fprior.accuracy = x ;
-                else
-		    {
-		    fprintf(stderr, "Entered accuracy %d for prior ", x);
-		    fprintf(stderr, "not in 1..%d, not done.\n", MAXACCURACY);
-	            }	
-		break;
-            case 'b':
-		bnf = 1;
-		bsf = 1;
-		break;
-            case 'c':
-                bcomment = 1;
-		break;
-	    case 'd':
-		flemke.blexstats   = 1;
-		break;
-            case 'e':
-                bshortequil = 1;
-		break;
-	    case 'g':
-		bgame = 1;
-		break;
-	    case 'G':
-		bgambit = 1;
-		strcpy(gintfname, optarg);
-		break;
-	    case 'i':
-		binterface = 1;
-		break;
-	    case 'l':
-		levels = atoi(optarg);
-		if (levels >= MINLEVEL && levels <= MAXLEVEL)
-		    break;
-		if (levels == -1)
-
-		    break; 
-		fprintf(stderr, "Binary tree level %d ", levels);
-		fprintf(stderr, "not in range %d .. %d, not done.\n", 
-			MINLEVEL, MAXLEVEL);
-		return 1;
-	    case 'm':
-		multiplegames = atoi(optarg);
-		break;
-	    case 'M':
-		multipriors = atoi(optarg);
-		break;
-	    case 'n':   
-		bnf = 1;
-		bsf = 0;
-		break;
-	    case 'o':
-                boutlcp = 1;
-		break;
-	    case 'O':
-                boutprior = 1;
-		break;
-	    case 'p':
-		newpayoffs = 1;
-		break;
-	    case 'r':
-		whichform = RSFORM ;
-		break;
-	    case 's':
-		seed = atoi(optarg);
-		break;
-	    case 'S':
-		x = atoi(optarg);
-		if ( x > 0 )
-		    fprior.seed = x ;
-                else
-		    {
-		    fprintf(stderr, "Entered Seed %d for prior ", x);
-		    fprintf(stderr, "must be positive, ignored.\n");
-	            }	
-		break;
-            case 't':
-		flemke.bouttabl   = 1;
-                flemke.binitabl   = 1;
-		break;
-	    case '?':
-		return 1;
-	    default:
-		abort ();
-	    }
     /* options have been input, amend extras	*/
-    if (newpayoffs)
-	{
-	newpayoffs = (argc - optind)/2;
-	printf("Entering %d new payoff pair(s).\n", newpayoffs);
-	}
-    if (newpayoffs)
-	{
-	int i;
-	newp1 = TALLOC(newpayoffs, int);
-	newp2 = TALLOC(newpayoffs, int);
-	for (i = 0, c = optind; i < newpayoffs; i++) 
-	    {
-	    newp1[i] = atoi(argv[c++]);
-	    newp2[i] = atoi(argv[c++]);
-	    }
-	} 
-    if (multiplegames)
-	{
-	if (levels == 0)
-	    {
-	    printf("Multiple games only for binary tree, ");
-	    printf("but will change equilibrium output.\n");
-	    multiplegames = 0;
-            bequil = 0 ;
-	    }
-		bequil = bshortequil;
-		bheadfirst = !bcomment && !boutlcp && !flemke.bouttabl &&
-			!flemke.blexstats && !bgame;
-	}
     if (multipriors > 0)
 	{
 	/* this would exclude the centroid for multiple priors
@@ -399,29 +261,11 @@ int main(int argc, char *argv[])
     /* options are parsed and flags set */
     /* document the set options         */
     printf("Options chosen,              [ ] = default:\n");
-    printf("    normal form            %s [N],  option -n\n",
-	    bnf ? "Y" : "N");
-    printf("    sequence form          %s [Y],  option -b : both NF and SF\n",
-	    bsf ? "Y" : "N");
-    printf("    interface to enumerate %s [N],  option -i , NF/SF as above\n",
-            binterface ? "Y" : "N");
-    printf("    GAMBIT interface       %s [N],  ", bgambit ? "Y" : "N");
-    printf("option -G file, SF only\n");
-    printf("    levels binary tree    %2d [0],  option -l # ", levels);
-    printf("(default 0: simple example)\n");
-    printf("    seed payoffs         %3d [0],  option -s #\n", seed);
-    printf("    multiple games       %3d [0],  option -m # ", multiplegames);
-    printf("(no equilibria unless option -e)\n");
-    printf("    equilibrium one line   %s [N],  option -e\n",
-            bshortequil ? "Y" : "N");
-    printf("    payoffs new          %3d [0],  option -p -- # # ... #\n",
-	    newpayoffs);
     printf("    Multiple priors     %4d [1],  option -M #\n", multipriors);
     printf("    Accuracy prior      %4d [%d], option -A #\n",
 	    fprior.accuracy, DEFAULTACCURACY);
     printf("    Seed prior           %3d [0],  ",
             fprior.seed);
-    printf("option -S # (default 0: centroid)\n");
     printf("    Output prior           %s [N],  option -O\n",
             boutprior ? "Y" : "N");
     printf("    game output            %s [N],  option -g\n",
@@ -449,50 +293,32 @@ int main(int argc, char *argv[])
 	    infosf(); // INFO
     
         /* process games                    */
-        if (multiplegames == 0)
-            multiplegames = 1;	/* simplify counting	*/
-        {   
 	    int gamecount = 0;
 	    int startprior = fprior.seed ;
     
 	    allocrealplan(realplan);
             if (bheadfirst) /* otherwise the header is garbled by LCP output */
                 inforesultheader ();
-	    while(1)        /* process multiple games       */
+	    int priorcount ;
+            /* multiple priors 	*/
+		bgame = 1; // DEBUGX
+		boutprior = 1; // DEBUGX;
+		multipriors = 10; // DEBUGX
+	    for (priorcount = 0; priorcount < multipriors; priorcount++)
 	        {
-	        int priorcount ;
-                /* multiple priors 	*/
-			bgame = 1; // DEBUGX
-			boutprior = 1; // DEBUGX;
-			multipriors = 10; // DEBUGX
-	        for (priorcount = 0; priorcount < multipriors; priorcount++)
-	            {
-	            genprior(fprior);
-                    if (bgame)
-        	        rawtreeprint();
-                    if (boutprior)
-        	        outprior();
-	            processgame(SFORM, bnf, seed + gamecount); 
-                    if ( ! bheadfirst )
-                        inforesultheader ();
-	            inforesult (fprior.seed, seed + gamecount);
-                    fprior.seed++ ;
-	            }
-	        /* next game */
-	        gamecount++ ;
-	        if (gamecount >= multiplegames)
-		    break;
-                if (multipriors > 1)
-	    	    printf("\n") ;
-	        createbintree (levels, seed + gamecount);
-	        genseqin();  
-	        autoname();
-                maxpayminusone(bcomment);
-	        fprior.seed = startprior ;
-	        }           /* end of processing multiple games     	 */
-	    if (multipriors * multiplegames > 1)	/* give averages */
-	        infosumresult (bsf, bnf, multipriors * multiplegames);
+	        genprior(fprior);
+                if (bgame)
+        	    rawtreeprint();
+                if (boutprior)
+        	    outprior();
+	        processgame(seed + gamecount); 
+                if ( ! bheadfirst )
+                    inforesultheader ();
+	        inforesult (fprior.seed, seed + gamecount);
+                fprior.seed++ ;
+	        }
+	    if (multipriors > 1)	/* give averages */
+	        infosumresult (multipriors);
 	    freerealplan(realplan);
-        }
     return 0;
 }
