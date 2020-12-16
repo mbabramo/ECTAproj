@@ -10,6 +10,45 @@
 
 #include "mp.h"
 
+
+
+int positive(mp a)
+{
+    return     (((a)[0] < 2 || ((a)[0] == 2 && (a)[1] == 0)) ? FALSE : TRUE);
+}
+int negative(mp a)
+{
+    return (((a)[0] > -2 || ((a)[0] == -2 && (a)[1] == 0)) ? FALSE : TRUE);
+}
+int length(mp a)
+{
+    return  (((a)[0] > 0) ? (a)[0] : -(a)[0]);
+}
+int sign(mp a)
+{
+    return (((a)[0] < 0) ? NEG : POS);
+}
+int zero(mp a)
+{
+    return ((((a)[0] == 2 || (a)[0] == -2) && (a)[1] == 0) ? TRUE : FALSE);
+}
+int one(mp a)
+{
+    return (((a)[0] == 2 && (a)[1] == 1) ? TRUE : FALSE);
+}
+void storesign(mp a, long sa)
+{
+    a[0] = ((a)[0] > 0) ? (sa) * ((a)[0]) : -(sa) * ((a)[0]);
+}
+void changesign(mp a)
+{
+    a[0] = -(a)[0];
+}
+void storelength(mp a, long la)
+{
+    a[0] = ((a)[0] > 0) ? (la) : -(la);
+}
+
 /*********************/
 /*global variables   */
 /*********************/

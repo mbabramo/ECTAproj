@@ -46,16 +46,10 @@
 #define TWO 2L
 #define ZERO 0L
 
-/********* MACROS ***********/
-#define positive(a)     (((a)[0] < 2 || ((a)[0]==2 && (a)[1]==0))?FALSE:TRUE)
-#define negative(a)     (((a)[0] > -2 || ((a)[0]==-2 && (a)[1]==0))?FALSE:TRUE)
-#define zero(a)         ((((a)[0]==2 || (a)[0]==-2) && (a)[1]==0)?TRUE:FALSE)
-#define one(a)          (((a)[0]==2 && (a)[1]==1)?TRUE:FALSE)
-#define length(a)       (((a)[0] > 0) ? (a)[0] : -(a)[0])
-#define sign(a)         (((a)[0] < 0) ? NEG : POS)
-#define storesign(a,sa) a[0]=((a)[0] > 0) ? (sa)*((a)[0]) : -(sa)*((a)[0])
-#define changesign(a)   a[0]= -(a)[0]
-#define storelength(a,la) a[0]=((a)[0] > 0) ? (la) : -(la)
+
+
+
+
 
 /*
    this is in decimal digits, you pay in memory if you increase this,

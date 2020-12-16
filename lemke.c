@@ -566,9 +566,16 @@ int lexminvar (int enter, int *z0leave)
     numcand = 0;
 	    /* leavecand [0..numcand-1] = candidates (rows) for leaving var */
     /* start with  leavecand = { i | A[i][col] > 0 }                        */
-    for (i=0; i<n; i++)
-	if (positive (A[i][col]))
-	    leavecand[numcand++] = i;
+	for (i = 0; i < n; i++)
+	{
+		int DEBUGY = positive(A[i][col]);
+		if (DEBUGY != positive(A[i][col]))
+		{
+			int DEBUGZ = 0;
+		}
+		if (positive(A[i][col]))
+			leavecand[numcand++] = i;
+	}
     if (numcand==0) 
 	raytermination(enter);
     if (numcand==1)

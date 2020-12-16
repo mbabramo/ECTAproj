@@ -1,36 +1,7 @@
 /*  main.c
  *  tracing procedure algorithm
  *  1 May 2001: extend with example
- *
- *  options:
- *      -A  #   accuracy for prior generation, maximally  MAXACCURACY
- *      -b      both normal and sequence form
- *      -c      complementary pivoting steps shown
- *      -d      degeneracy statistics in lexmin ratio test
- *      -e      give equilibrium  (when -m #)
- *      -E      equilibrium leaves from input only
- *      -i      interface with Audet/Hansen enumeration, NF/SF as chosen
- *      -g      print raw game data
- *      -G file interface with GAMBIT via file (re-writes for each game,
- *              so don't use with -m )
- *      -l  #   bintree with # levels (e.g. #=3, any number in
- *              MINLEVEL .. MAXLEVEL is allowed)
- *              default (no -l  option): solve tracingexample.
- *		negative number: -1      solve forward induction example
- *      -m  #   process multiple games, requires  -l option
- *              -m 1 implies quiet mode
- *      -M  #   multiple priors per game
- *      -n      compute with normal form (default: sequence form)
- *      -o      output LCP
- *      -O      output prior
- *      -p -- # # # # ...     replace the payoffs at leaves by # # # # 
- *              (leaf 0/pl 1, leaf 0/pl 2, leaf 1/pl 1, leaf 1/pl 2 ...)
- *              which should be NEGATIVE since invoked AFTER re-normalization;
- *              this must be the LAST option on the command line
- *      -r      compute with RSF         (not yet implemented)
- *      -s  #   payoff seed 
- *      -S  #   prior seed 
- *      -t      tableaus at every pivoting step
+ * 
  */
 
 #include <stdio.h>
