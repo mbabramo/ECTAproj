@@ -169,7 +169,7 @@ void processgame (int docuseed)
     sumpivots  += pivots  =
 	pivotcount;
     summpdigits  += mpdigits  =
-	DIG2DEC(record_digits);
+	Dig2Dec(record_digits);
     /* equilibrium size     */
     offset = 0;
     for (pl = 1; pl < PLAYERS; pl++)

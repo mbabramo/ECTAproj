@@ -48,6 +48,14 @@ void storelength(mp a, long la)
 {
     a[0] = ((a)[0] > 0) ? (la) : -(la);
 }
+long DEC2DIGFunc(long d)
+{
+    return ((d) % BASE_DIG ? (d) / BASE_DIG + 1 : (d) / BASE_DIG); 
+}
+long Dig2Dec(long d)
+{
+    return ((d)*BASE_DIG);
+}
 
 /*********************/
 /*global variables   */
@@ -556,7 +564,7 @@ void divint(mp a, mp b, mp c )
  
 void digits_overflow()
 {
-  printf("Overflow at digits=%d\n",DIG2DEC(digits));
+  printf("Overflow at digits=%d\n",Dig2Dec(digits));
   exit(1);
 }
 
