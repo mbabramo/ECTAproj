@@ -36,50 +36,6 @@ int mptoi(mp a, int *result, int bcomplain)
         return 0;
 }
 
-
-long readrat(mp Na, mp Da) 
-	/* read a rational or integer and convert to mp with base BASE */
-	/* returns true if denominator is not one                      */
-{
-  char in[MAXINPUT],num[MAXINPUT],den[MAXINPUT];
-  scanf("%s",in);
-  atoaa(in,num,den);     /*convert rational to num/dem strings*/
-  atomp(num,Na);
-  if (den[0]=='\0') 
-	{
-	itomp(1L,Da);
-	return(FALSE);
-	}
-   atomp(den,Da);
-   return(TRUE);
-}
-void atomp(char s[], mp a)  /*convert string to mp integer*/
-{
-	mp mpone;
-	long diff,ten,i,sig;
-	itomp(1L,mpone);
-	ten=10L;
-	for (i=0; s[i]==' ' || s[i]=='\n' || s[i]=='\t'; i++);
-	       /*skip white space*/
-	sig=POS;
-	if( s[i] == '+' || s[i]=='-' ) /* sign */
-	   sig=(s[i++]=='+') ? POS : NEG;
-	itomp(0L,a);
-	while ( s[i] >= '0' && s[i] <= '9')
-	{ diff=s[i] - '0';
-	  linint(a,ten,mpone,diff);
-	  i++;
-	}
-	storesign(a,sig);
-}  /* end of atomp */
-
-void readmp(mp a)      /* read an integer and convert to mp with base BASE */
-{
-  long in;
-  scanf("%ld",&in);
-  itomp(in,a);
-}
-
 void itomp(long in, mp a)     /* convert integer i to multiple precision with base BASE */
 {
   long i;
@@ -97,21 +53,6 @@ void itomp(long in, mp a)     /* convert integer i to multiple precision with ba
 		   storelength(a,i+1);
 		   }
 }        /* end of itomp  */
-
-void atoaa(char in[], char num[], char den[])  /* convert rational string in to num/den strings*/
-{
- long i,j;
- for(i=0;in[i] != '\0' && in[i] != '/';i++) num[i]=in[i];
- num[i]='\0';
- den[0]='\0';
- if (in[i] == '/')
-    {
-     for(j=0;in[j+i+1] != '\0' ;j++) den[j]=in[i+j+1];
-     den[j]='\0';
-    }
-}               /* end of atoaa */
-
-
 
 void prat(char name[],mp Nt,mp Dt)  /*print the long precision rational Nt/Dt  */
 {

@@ -38,11 +38,6 @@ void sflcp(void);
  */
 void realplanfromprob(int pl, Rat *rplan);
 
-/* asserts that for player  pl  moves[]->realprob == probvector,
- * if (bcomplain):  prints to stdout all differing positions
- */
-Bool iseqrealplantoprob(int pl, Rat *rplan, Bool bcomplain);
-
 /* how many isets of player  pl  have nondeterministic moves
  * in the realization plan  rplan  (e.g. if 0: pure strategy)
  */

@@ -21,15 +21,6 @@
     <ClCompile Include="col.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gambit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="interface.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="leaves.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lemke.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,9 +30,6 @@
     <ClCompile Include="mp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="normform.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="prior.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,9 +37,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rataux.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rsf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="seqform.c">
@@ -77,25 +62,13 @@
     <ClInclude Include="col.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gambit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="getopt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="leaves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lemke.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="normform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="prior.h">
@@ -105,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rataux.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rsf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="seqform.h">

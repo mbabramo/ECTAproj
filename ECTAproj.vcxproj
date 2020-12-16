@@ -100,18 +100,13 @@
   <ItemGroup>
     <ClCompile Include="alloc.c" />
     <ClCompile Include="col.c" />
-    <ClCompile Include="gambit.c" />
     <ClCompile Include="getopt.c" />
-    <ClCompile Include="interface.c" />
-    <ClCompile Include="leaves.c" />
     <ClCompile Include="lemke.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mp.c" />
-    <ClCompile Include="normform.c" />
     <ClCompile Include="prior.c" />
     <ClCompile Include="rat.c" />
     <ClCompile Include="rataux.c" />
-    <ClCompile Include="rsf.c" />
     <ClCompile Include="seqform.c" />
     <ClCompile Include="sfnf.c" />
     <ClCompile Include="treedef.c" />
@@ -120,17 +115,12 @@
   <ItemGroup>
     <ClInclude Include="alloc.h" />
     <ClInclude Include="col.h" />
-    <ClInclude Include="gambit.h" />
     <ClInclude Include="getopt.h" />
-    <ClInclude Include="interface.h" />
-    <ClInclude Include="leaves.h" />
     <ClInclude Include="lemke.h" />
     <ClInclude Include="mp.h" />
-    <ClInclude Include="normform.h" />
     <ClInclude Include="prior.h" />
     <ClInclude Include="rat.h" />
     <ClInclude Include="rataux.h" />
-    <ClInclude Include="rsf.h" />
     <ClInclude Include="seqform.h" />
     <ClInclude Include="sfnf.h" />
     <ClInclude Include="treedef.h" />

@@ -624,85 +624,6 @@ int lexminvar (int enter, int *z0leave)
 }       /* end of lexminvar (col, *z0leave);                        */
 
 
-/* returns the leaving variable in  VARS  as entered by user,
- * when  enter  in VARS is entering variable
- * only nonzero entries of entering column admitted
- * boolean  *z0leave  indicates back that  z0  has been
- * entered as leaving variable, and then
- * the returned value is the index of  z0
- */
-int interactivevar (int enter, int *z0leave)
-{                                                       
-    char s[INFOSTRINGLENGTH], instring[2];
-
-    int inp, col, var;
-    int breject = 1;
-    assertcobasic(enter, "interactivevar");
-    col = TABCOL(enter);
-
-    vartoa(enter, s);
-    printf("   Entering variable (column): %s\n", s);
-    while (breject)
-	{
-	printf("   Leaving row (basic variable z.. or w..), ");
-	printf("or 't' for tableau:\n");
-	strcpy(instring, "?");
-	if (scanf("%1s", instring)==EOF)
-	    {
-	    printf ("Input terminated too early with EOF\n");
-	    exit(1);
-	    }
-	if ( instring[0] == 't')
-	    {
-	    printf("\n");
-	    outtabl();
-	    vartoa(enter, s);
-	    printf("   Entering variable (column): %s\n", s);
-	    continue;
-	    }
-	scanf("%d", &inp);
-	printf("   You typed %s%d\n", instring, inp);
-	if ( (inp < 0) || (inp > n))
-	    {
-	    printf("Variable index %d outside 0..n=%d\n",
-		    inp, n);
-	    continue;
-	    }
-	if ( instring[0] == 'w')
-	    {
-	    if (inp == 0)
-		{
-		printf("Variable w0 not allowed\n");
-		continue;
-		}
-	    var = inp + n;
-	    }
-	else if ( instring[0] == 'z')
-	    var = inp;
-	else 
-	    {
-	    printf("Variable not starting with  z  or  w\n");
-	    continue;
-	    }
-	/* var == variable in VARS giving what has been input   */
-	if ( bascobas[var] >= n)
-	    {
-	    vartoa (var, s);
-	    printf("Variable %s not basic\n", s);
-	    continue;
-	    }
-	if ( zero( A [bascobas[var]] [col] ) )
-	    {
-	    vartoa (var, s);
-	    printf("Row %s has zero pivot element, not allowed\n", s);
-	    continue;
-	    }
-	breject = 0;    /* now everything ok            */
-	}       /* end of  while (breject) for input    */
-*z0leave = (var == Z(0));
-return var;
-}   /* end of  interactivevar (col, *z0leave);          */
-
 void negcol(int col)
 	/* negate tableau column  col   */
 {
@@ -791,8 +712,7 @@ void runlemke(Flagsrunlemke flags)
     
     /* z0 enters the basis to obtain lex-feasible solution      */
     enter = Z(0);
-	leave = flags.binteract ? interactivevar(enter, &z0leave) :
-	    lexminvar(enter, &z0leave) ;
+	leave = lexminvar(enter, &z0leave) ;
     
     /* now give the entering q-col its correct sign             */
     negcol (RHS);   
@@ -813,8 +733,7 @@ void runlemke(Flagsrunlemke flags)
 	if (flags.bouttabl) 
 	    outtabl();
 	enter = complement(leave);
-	leave = flags.binteract ? interactivevar(enter, &z0leave) :
-		lexminvar(enter, &z0leave) ;
+	leave = lexminvar(enter, &z0leave) ;
         if (pivotcount++ == flags.maxcount)
 	    {
             printf("------- stop after %d pivoting steps --------\n", 

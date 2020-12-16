@@ -44,14 +44,3 @@ Rat contfract(double x, int accuracy)
     result.den = d1 ;
     return result;
 }
-
-void ratscalarprod(int dim, Rat *vec1, Rat *vec2, Rat *result)
-{
-    int j;
-    double sum = (double) result->num / (double) result->den ;
-
-    for (j=0; j < dim; j++)
-        sum += ((double) vec1[j].num * (double) vec2[j].num) /
-	       ((double) vec1[j].den * (double) vec2[j].den ) ;
-    *result = contfract (sum, INT_MAX);
-}

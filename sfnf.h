@@ -28,11 +28,6 @@ void freerealplan(Rat * realpl[PLAYERS]);
  * requires top-down ordering of moves
  */
 void behavtorealprob (int pl);
-
-/* for player pl: returns that  rplan1  and  rplan2  agree,
- * gives offending disagreements to stdout if  bcomplain==1
- */
-Bool eqrealplans(int pl, Rat *rplan1, Rat *rplan2, Bool bcomplain);
 
 
 /* copy  frommatr[i][j][plminusone] 

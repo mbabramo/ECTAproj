@@ -118,31 +118,6 @@ void realplanfromprob(int pl, Rat *rplan)
     for (i = 0; i < nseqs[pl]; i++)
          rplan[i] = (firstmove[pl] + i)->realprob;
 }
-
-Bool iseqrealplantoprob(int pl, Rat *rplan, Bool bcomplain)
-{
-    int i;
-    char s[MAXSTRL];
-    Bool isok=1;
-
-    for (i = 0; i < nseqs[pl]; i++)
-        if (! ratiseq(rplan[i], (firstmove[pl] + i)->realprob))
-	    {
-	    isok = 0;
-            if (bcomplain)
-                {
-                seqtoa(firstmove[pl] + i, pl, s);
-                printf ("Player %d, move %s has realprob ", pl, s);
-                rattoa( (firstmove[pl] + i)->realprob, s);
-                printf ("%s", s);
-                rattoa( rplan[i], s);
-                printf (", but should be %s\n", s);
-                }
-            else
-                break;
-            }
-    return isok ;
-}
 
 int  propermixisets(int pl, Rat *rplan)
 {

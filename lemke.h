@@ -37,7 +37,6 @@ typedef struct
     int   binitabl ;    /* Y/N  output entire tableau at beginning/end  */
     int   bouttabl  ;   /* Y/N  output entire tableau at each step      */
     int   boutsol   ;   /* Y/N  output solution                         */
-    int   binteract ;   /* Y/N  interactive pivoting                    */
     int   blexstats ;   /* Y/N  statistics on lexminratio tests         */
     }
     Flagsrunlemke;
