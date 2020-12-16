@@ -222,8 +222,6 @@ void processgame (int whichform, Bool bnf, int docuseed)
 	}
     if (bequil)
 	showeq (whichform, bshortequil, docuseed); 
-    if (bgambit && whichform == SFORM)
-	gambshoweq(); 
 }
 
 
