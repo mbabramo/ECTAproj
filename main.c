@@ -38,7 +38,6 @@
 #include <stdlib.h>	/* atoi(), free()       */
 #include <ctype.h>	/* isprint()            */
 /* #include <unistd.h> */
-#include "getopt.h"
 	/* getopt(), optarg, optopt, optind             */
 #include <time.h>
 	/* clock_t, clock(), CLOCKS_PER_SEC     	*/

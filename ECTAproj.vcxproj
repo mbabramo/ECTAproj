@@ -100,7 +100,6 @@
   <ItemGroup>
     <ClCompile Include="alloc.c" />
     <ClCompile Include="col.c" />
-    <ClCompile Include="getopt.c" />
     <ClCompile Include="lemke.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mp.c" />
@@ -115,7 +114,6 @@
   <ItemGroup>
     <ClInclude Include="alloc.h" />
     <ClInclude Include="col.h" />
-    <ClInclude Include="getopt.h" />
     <ClInclude Include="lemke.h" />
     <ClInclude Include="mp.h" />
     <ClInclude Include="prior.h" />

@@ -17,35 +17,48 @@
 
 #include "mp.h"
 
-/* used for tableau:    */
-#define Z(i) (i)
-#define W(i) (i+n)
-	/* VARS   = 0..2n = Z(0) .. Z(n) W(1) .. W(n)           */
-	/* ROWCOL = 0..2n,  0 .. n-1: tabl rows (basic vars)    */
-	/*                  n .. 2n:  tabl cols  0..n (cobasic) */
-#define RHS  (n+1)                   /*  q-column of tableau    */
-#define TABCOL(v)  (bascobas[v]-n)   
-	/*  v in VARS, v cobasic:  TABCOL(v) is v's tableau col */
-	/*  v  basic:  TABCOL(v) < 0,  TABCOL(v)+n   is v's row */
-
-/* LCP input    */
-Rat **lcpM;
-Rat *rhsq; 
-Rat *vecd; 
-int lcpdim = 0; /* set in setlcp                */
 static int n;   /* LCP dimension as used here   */
 
+/* LCP input    */
+Rat** lcpM;
+Rat* rhsq;
+Rat* vecd;
+int lcpdim = 0; /* set in setlcp                */
+
 /* LCP result   */
-Rat  *solz; 
+Rat* solz;
 int  pivotcount;
 
 /* tableau:    */
-static  mp **A;                 /* tableau                              */
-static  int *bascobas;          /* VARS  -> ROWCOL                      */
-static  int *whichvar;          /* ROWCOL -> VARS, inverse of bascobas  */
+static  mp** A;                 /* tableau                              */
+static  int* bascobas;          /* VARS  -> ROWCOL                      */
+static  int* whichvar;          /* ROWCOL -> VARS, inverse of bascobas  */
+
+/* used for tableau:    */
+int Z(int i)
+{
+	return i;
+}
+int W(int i)
+{
+	return i + n;
+}
+	/* VARS   = 0..2n = Z(0) .. Z(n) W(1) .. W(n)           */
+	/* ROWCOL = 0..2n,  0 .. n-1: tabl rows (basic vars)    */
+	/*                  n .. 2n:  tabl cols  0..n (cobasic) */
+int RHS()
+{
+	return n + 1;
+}
+int TABCOL(int v)
+{
+	return bascobas[v] - n;
+}
+	/*  v in VARS, v cobasic:  TABCOL(v) is v's tableau col */
+	/*  v  basic:  TABCOL(v) < 0,  TABCOL(v)+n   is v's row */
                                                                         
 /* scale factors for variables z
- * scfa[Z(0)]   for  d,  scfa[RHS] for  q
+ * scfa[Z(0)]   for  d,  scfa[RHS()] for  q
  * scfa[Z(1..n)] for cols of  M
  * result variables to be multiplied with these
  */
@@ -186,7 +199,7 @@ void filltableau (void)
 	for (i=0; i<n; i++)
 	    {
 	    den = (j==0) ? vecd[i].den :
-		  (j==RHS) ? rhsq[i].den : lcpM[i][j-1].den ;
+		  (j==RHS()) ? rhsq[i].den : lcpM[i][j-1].den ;
 	    itomp(den, tmp);
 	    lcm(scfa[j], tmp);
 	    }
@@ -194,9 +207,9 @@ void filltableau (void)
 	for (i=0; i<n; i++)
 	    {
 	    den = (j==0) ? vecd[i].den :
-		  (j==RHS) ? rhsq[i].den : lcpM[i][j-1].den ;
+		  (j==RHS()) ? rhsq[i].den : lcpM[i][j-1].den ;
 	    num = (j==0) ? vecd[i].num :
-		  (j==RHS) ? rhsq[i].num : lcpM[i][j-1].num ;
+		  (j==RHS()) ? rhsq[i].num : lcpM[i][j-1].num ;
 		/* cols 0..n of  A  contain LHS cobasic cols of  Ax = b     */
 		/* where the system is here         -Iw + dz_0 + Mz = -q    */
 		/* cols of  q  will be negated after first min ratio test   */
@@ -273,8 +286,8 @@ void outtabl (void)
     colpr("var");                   /* headers describing variables */
     for (j=0; j<=n+1; j++)
 	{
-	if (j==RHS)
-	    colpr("RHS");
+	if (j==RHS())
+	    colpr("RHS()");
 	else
 	    {
 	    vartoa(whichvar[j+n], s);
@@ -284,8 +297,8 @@ void outtabl (void)
     colpr("scfa");                  /* scale factors                */
     for (j=0; j<=n+1; j++)
 	{
-	if (j==RHS)
-	    mptoa(scfa[RHS], smp);
+	if (j==RHS())
+	    mptoa(scfa[RHS()], smp);
 	else if (whichvar[j+n] > n) /* col  j  is some  W           */
 	    sprintf(smp, "1");
 	else                        /* col  j  is some  Z:  scfa    */
@@ -341,12 +354,12 @@ void outsol (void)
 	if ( (row = bascobas[i]) < n)  /*  i  is a basic variable           */
 	    {
 	    if (i<=n)       /* printing Z(i)        */
-		/* value of  Z(i):  scfa[Z(i)]*rhs[row] / (scfa[RHS]*det)   */
-		mulint(scfa[Z(i)], A[row][RHS], num);
+		/* value of  Z(i):  scfa[Z(i)]*rhs[row] / (scfa[RHS()]*det)   */
+		mulint(scfa[Z(i)], A[row][RHS()], num);
 	    else            /* printing W(i-n)      */
-		/* value of  W(i-n)  is  rhs[row] / (scfa[RHS]*det)         */
-		copy(num, A[row][RHS]);
-	    mulint(det, scfa[RHS], den);
+		/* value of  W(i-n)  is  rhs[row] / (scfa[RHS()]*det)         */
+		copy(num, A[row][RHS()]);
+	    mulint(det, scfa[RHS()], den);
 	    reduce(num, den);
 	    pos = mptoa(num, smp);
 	    if (!one(den))  /* add the denominator  */
@@ -381,9 +394,9 @@ Bool notokcopysol (void)
     for (i=1; i<=n; i++) 
 	if ( (row = bascobas[i]) < n)  /*  i  is a basic variable */
 	    {
-	    /* value of  Z(i):  scfa[Z(i)]*rhs[row] / (scfa[RHS]*det)   */
-	    mulint(scfa[Z(i)], A[row][RHS], num);
-	    mulint(det, scfa[RHS], den);
+	    /* value of  Z(i):  scfa[Z(i)]*rhs[row] / (scfa[RHS()]*det)   */
+	    mulint(scfa[Z(i)], A[row][RHS()], num);
+	    mulint(det, scfa[RHS()], den);
 	    reduce(num, den);
             if ( mptoi(num, &(solz[i-1].num), 1) )
                 {
@@ -566,17 +579,17 @@ int lexminvar (int enter, int *z0leave)
         }
     for (j = 0; numcand > 1; j++)
         /* as long as there is more than one leaving candidate perform
-         * a minimum ratio test for the columns of  j  in RHS, W(1),... W(n)
+         * a minimum ratio test for the columns of  j  in RHS(), W(1),... W(n)
          * in the tableau.  That test has an easy known result if
          * the test column is basic or equal to the entering variable.
          */
 	{
-        if (j>n)    /* impossible, perturbed RHS should have full rank  */
+        if (j>n)    /* impossible, perturbed RHS() should have full rank  */
 	    errexit("lex-minratio test failed");
         lextested[j]      += 1 ;
         lexcomparisons[j] += numcand ;
 
-        testcol = (j==0) ? RHS : TABCOL(W(j)) ;
+        testcol = (j==0) ? RHS() : TABCOL(W(j)) ;
         if (testcol != col)       /* otherwise nothing will change      */
 	{
 	if (testcol >= 0)
@@ -663,7 +676,7 @@ void pivot (int leave, int enter)
 	if (i != row)               /*  A[row][..]  remains unchanged       */
 	    {
 	    nonzero = !zero(A[i][col]);
-	    for (j=0; j<=n+1; j++)      /*  assume here RHS==n+1        */
+	    for (j=0; j<=n+1; j++)      /*  assume here RHS()==n+1        */
 		if (j != col)
 		    /*  A[i,j] =
 		       (A[i,j] A[row,col] - A[i,col] A[row,j])/ det     */
@@ -715,7 +728,7 @@ void runlemke(Flagsrunlemke flags)
 	leave = lexminvar(enter, &z0leave) ;
     
     /* now give the entering q-col its correct sign             */
-    negcol (RHS);   
+    negcol (RHS());   
     
     if (flags.bouttabl) 
 	{
