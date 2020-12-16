@@ -543,28 +543,6 @@ mulint(Da,Db,Dc);  /* Dc =  Da*Db           */
 reduce(Nc,Dc);
 }
 
-
-divrat(Na,Da,Nb,Db,Nc,Dc) 
-	/* computes Nc/Dc = (Na/Da)  / ( Nb/Db )
-	   and reduces answer by gcd(Nc,Dc) */
-mp Na,Da,Nb,Db,Nc,Dc;
-{
-mulint(Na,Db,Nc);
-mulint(Da,Nb,Dc);
-reduce(Nc,Dc);
-}
- 
-
-mulrat(Na,Da,Nb,Db,Nc,Dc) 
-	/* computes Nc/Dc = Na/Da  * Nb/Db
-	   and reduces answer by gcd(Nc,Dc) */
-mp Na,Da,Nb,Db,Nc,Dc;
-{
-mulint(Na,Nb,Nc);
-mulint(Da,Db,Dc);
-reduce(Nc,Dc);
-}
-
 /***************************************************************/
 /*                                                             */
 /*     End package of routines for rational arithmetic         */
