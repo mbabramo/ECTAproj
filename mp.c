@@ -10,8 +10,6 @@
 
 #include "mp.h"
 
-
-
 int positive(mp a)
 {
     return     (((a)[0] < 2 || ((a)[0] == 2 && (a)[1] == 0)) ? FALSE : TRUE);
@@ -145,9 +143,9 @@ int mptoa(mp x, char s[])
 int i, pos=0;
 if (sign(x)==NEG) 
     pos = sprintf(s, "-");
-pos += sprintf(&s[pos], "%u", x[length(x)-1] );
+pos += sprintf(&s[pos], "%u", x[length(x)-1] ); // this is the first digit of the number, so we print just the number
 for (i=length(x)-2; i>=1; i--) 
-    pos += sprintf(&s[pos], FORMAT, x[i]);
+    pos += sprintf(&s[pos], FORMAT, x[i]); // this represents four digits, so if this is less than four digits, we still print as four digits (e.g., 123 => 0123)
 return pos;
 }
 
@@ -310,17 +308,17 @@ void linint(mp a,long ka,mp b,long kb)
     la = length(a);
     lb = length(b);
     for (i=1; i<la; i++)
-        a[i] *= ka;
+        a[i] *= ka; // multiply the k digits by ka
     if (sign(a) != sign(b))
         kb = -kb;
     if (lb>la)
-        {
+        { // we must make a longer, but initialize the extra digits of a to 0
         storelength(a, lb);
 	for (i=la; i<lb; i++)
             a[i]=0;
         }
     for (i=1; i<lb; i++)
-        a[i] += kb * b[i];
+        a[i] += kb * b[i]; // add in the b digits times kb
     normalize(a);
 }   /* end of linint */
 
@@ -575,20 +573,6 @@ void digits_overflow()
 /*     Not currently used, but may be useful                   */
 /***************************************************************/
 
-
-linrat(Na,Da,ka,Nb,Db,kb,Nc,Dc) 
-	/* computes Nc/Dc = ka*Na/Da  +kb* Nb/Db 
-	   and reduces answer by gcd(Nc,Dc) */
-mp Na,Da,Nb,Db,Nc,Dc;
-long ka,kb;
-{
-mp c;
-mulint(Na,Db,Nc);
-mulint(Da,Nb,c);
-linint(Nc,ka,c,kb);  /* Nc = (ka*Na*Db)+(kb*Da*Nb)  */
-mulint(Da,Db,Dc);  /* Dc =  Da*Db           */
-reduce(Nc,Dc);
-}
 
 /***************************************************************/
 /*                                                             */

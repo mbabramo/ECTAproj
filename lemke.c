@@ -185,7 +185,8 @@ void inittablvars (void)
 	whichvar[i-1]  = W(i);
 	}
 }       /* end of inittablvars()        */
-
+
+
 void filltableau (void)
 	/* fill tableau from  M, q, d   */
 {
@@ -218,7 +219,9 @@ void filltableau (void)
 	    copy (tmp3, scfa[j]);
 	    divint(tmp3, tmp, tmp2);        /* divint modifies 1st argument */
 	    itomp (num, tmp);
-	    mulint(tmp2, tmp, A[i][j]);
+		mp product;
+		mulint(tmp2, tmp, product);
+		setinA(i, j, product);
 	    }
 	}   /* end of  for(j=...)   */
     inittablvars();
@@ -306,7 +309,7 @@ void outtabl (void)
 	colpr(smp);
 	}
     colnl();
-    for (i=0; i<n; i++)             /* print row  i                 */
+    for (i=0; i<n; i++)             /* print row  i (which will be listed as w followed by i + 1 */
 	{
 	vartoa(whichvar[i], s);
 	colpr(s);
@@ -568,11 +571,6 @@ int lexminvar (int enter, int *z0leave)
     /* start with  leavecand = { i | A[i][col] > 0 }                        */
 	for (i = 0; i < n; i++)
 	{
-		int DEBUGY = positive(A[i][col]);
-		if (DEBUGY != positive(A[i][col]))
-		{
-			int DEBUGZ = 0;
-		}
 		if (positive(A[i][col]))
 			leavecand[numcand++] = i;
 	}
@@ -649,7 +647,7 @@ void negcol(int col)
 {
     int i;
     for (i=0; i<n; i++)
-	changesign(A[i][col]);
+		changesigninA(i, col);
 }
 
 void negrow(int row)
@@ -658,9 +656,11 @@ void negrow(int row)
     int j;
     for (j=0; j<=n+1; j++)
 	if (!zero(A[row][j]))
-	    changesign(A[row][j]);
+		changesigninA(row, j);
 }
-
+
+static int pivotnum = 0;
+
 /* leave, enter in  VARS  defining  row, col  of  A
  * pivot tableau on the element  A[row][col] which must be nonzero
  * afterwards tableau normalized with positive determinant
@@ -687,20 +687,22 @@ void pivot (int leave, int enter)
 		if (j != col)
 		    /*  A[i,j] =
 		       (A[i,j] A[row,col] - A[i,col] A[row,j])/ det     */
-		    {
+		{
 		    mulint (A[i][j], pivelt, tmp1);
 		    if (nonzero)
 			{
 			mulint(A[i][col], A[row][j], tmp2);
 			linint(tmp1, 1, tmp2, negpiv ? 1 : -1);
 			}
-		    divint (tmp1, det, A[i][j]);
-		    }
+			mp q;
+			divint(tmp1, det, q);
+			setinA(i, j, q); 
+		}
 	    /* row  i  has been dealt with, update  A[i][col]  safely   */
 	    if (nonzero && !negpiv)
-		changesign (A[i][col]);
+			changesigninA(i, col); 
 	    }       /* end of  for (i=...)                              */
-    copy(A[row][col], det);
+	setinA(row, col, det);
     if (negpiv)
 	negrow(row);
     copy(det, pivelt);      /* by construction always positive      */
@@ -708,8 +710,21 @@ void pivot (int leave, int enter)
     /* update tableau variables                                     */
     bascobas[leave] = col+n;        whichvar[col+n] = leave;
     bascobas[enter] = row;          whichvar[row]   = enter;
+
+	pivotnum++;
 }       /* end of  pivot (leave, enter)                         */
 
+
+changesigninA(int i, int j)
+{
+	changesign(A[i][j]);
+}
+
+setinA(int i, int j, mp value)
+{
+	copy(A[i][j], value);
+}
+
 /* ------------------------------------------------------------ */ 
 void runlemke(Flagsrunlemke flags)
 {

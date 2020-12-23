@@ -36,11 +36,6 @@ int nisets[PLAYERS];
 
 static Payvec maxpay;
 
-
-int nextrandpay (void)
-{
-    return rand() / (RAND_MAX / MAXRANDPAY) ;
-}
 
 void alloctree(int nn, int ni, int nm, int no)
 {
@@ -229,10 +224,10 @@ void rawtreeprint(void)
 	{
 	colipr(u - nodes);
 	colipr(u->terminal);
-	colipr(u->iset - isets);
-	colipr(u->father - nodes);
-	colipr(u->reachedby - moves);
-	colipr(u->outcome - outcomes);
+	colipr(u->iset == NULL ? -1 : u->iset - isets);
+	colipr(u->father == NULL ? -1 : u->father - nodes);
+	colipr(u->reachedby == NULL ? -1 : u->reachedby - moves);
+	colipr(u->outcome == NULL ? -1 : u->outcome - outcomes);
 	for (pl=1; pl < PLAYERS; pl++)
 	    if (u->terminal)
 		{
@@ -306,7 +301,7 @@ void rawtreeprint(void)
 	colipr(c - moves);
 	movetoa(c, pl-1, s);    colpr(s);
 	seqtoa(c, pl-1, s);     colpr(s);
-	colipr(c->atiset - isets);
+	colipr(c->atiset == NULL ? -1 : c->atiset - isets);
 	rattoa(c->behavprob, s);    colpr(s);
 	rattoa(c->realprob, s);     colpr(s);
 	colipr(c->redsfcol);

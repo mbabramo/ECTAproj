@@ -77,8 +77,6 @@ void gensf(void)
 	}
 }       /* end of  gensf()              */
 
-
-
 void sflcp(void)
 {
     int i;

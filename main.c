@@ -157,7 +157,7 @@ void processgame (int docuseed)
 	if (bcomment)
 		printf("Generating and solving sequence form.\n");
 	sflcp();
-
+
     covvector();
     if (boutlcp)
 	outlcp();
@@ -199,14 +199,13 @@ int main(int argc, char *argv[])
 
     Bool bheadfirst = 0;/* headers first (multiple games)       */
     Bool bgame = 0;     /* output the raw game tree (-g option) */
-    int c ;
 
     flemke.maxcount   = 0;
-    flemke.bdocupivot = 0;
+    flemke.bdocupivot = 1; 
     flemke.binitabl   = 0;
-    flemke.bouttabl   = 0;
-    flemke.boutsol    = 0;
-    flemke.blexstats  = 0;
+    flemke.bouttabl   = 1;
+    flemke.boutsol    = 1;
+    flemke.blexstats  = 1;
 
     fprior.seed       = 0 ;
     fprior.accuracy   = DEFAULTACCURACY ;
@@ -271,9 +270,9 @@ int main(int argc, char *argv[])
                 inforesultheader ();
 	    int priorcount ;
             /* multiple priors 	*/
-		bgame = 1; // DEBUGX
-		boutprior = 1; // DEBUGX;
-		multipriors = 10; // DEBUGX
+		bgame = 1; 
+		boutprior = 1; 
+		multipriors = 1; 
 	    for (priorcount = 0; priorcount < multipriors; priorcount++)
 	        {
 	        genprior(fprior);

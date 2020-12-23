@@ -86,12 +86,6 @@
 typedef long mp[MAX_DIGITS+1]; 
 	/* type mp holds one multi-precision integer*/
 
-/* bvs: not yet used */
-
-typedef long * mp_t;
-typedef long **mp_array;
-typedef long ***mp_matrix;
-
 /*********************/
 /*global variables   */
 /*********************/

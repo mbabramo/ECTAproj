@@ -90,9 +90,12 @@ void covvector()
         vecd[i] = ratneg(rhsq[i]);
     /* first blockrow += -Aq    */
     for (i = 0; i < dim1; i++)
-            for (j=0; j < dim2; j++)
-                vecd[i] = ratadd( vecd[i], ratmult( lcpM [i] [offset + j],
-                          (firstmove[2] + j)->realprob)) ;
+        for (j = 0; j < dim2; j++)
+        {
+            vecd[i] = ratadd(vecd[i], ratmult(lcpM[i][offset + j],
+                (firstmove[2] + j)->realprob));
+        }
+
         /* RSF yet to be done*/  
     /* third blockrow += -B\T p */
     for (i = offset; i < offset + dim2; i++)
